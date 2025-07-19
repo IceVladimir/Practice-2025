@@ -17,7 +17,6 @@ public class SpiderController : MonoBehaviour
     [Header("Leg Group")]
     public SpiderLegController[] legsInZigzagOrder;
 
-
     private int currentLegIndex = 0;
     private float stepCooldown = 0.02f;
     private float lastStepTime = 0f;
@@ -32,10 +31,10 @@ public class SpiderController : MonoBehaviour
             for (int i = 0; i < legsInZigzagOrder.Length; i++)
             {
                 int legIndex = (currentLegIndex + i) % legsInZigzagOrder.Length;
-                var leg = legsInZigzagOrder[legIndex];
-                if (leg.ShouldStep())
+                var legController = legsInZigzagOrder[legIndex];
+                if (legController.ShouldStep())
                 {
-                    leg.TryMove();
+                    legController.TryMove();
                     currentLegIndex = (legIndex + 1) % legsInZigzagOrder.Length;
                     lastStepTime = Time.time;
                     break;

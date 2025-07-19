@@ -55,8 +55,11 @@ public class SpiderLegController : MonoBehaviour
         Vector3 origin = raycastOrigin.position;
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 50f, groundLayer))
         {
-            float dist = Vector3.Distance(ikTarget.position, hit.point);
-            return dist > stepDistance;
+            Vector3 ikTarget_Horizontal = new Vector3(ikTarget.position.x, 0, ikTarget.position.z);
+            Vector3 rayHit_Horizontal = new Vector3(hit.point.x, 0, hit.point.z);
+            //float distance = Mathf.Abs(ikTarget.position.x - hit.point.x);
+            float dist = Vector3.Distance(ikTarget_Horizontal, rayHit_Horizontal);
+            return dist > stepDistance && !isStepping;
         }
         return false;
     }
