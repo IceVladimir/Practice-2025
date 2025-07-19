@@ -13,6 +13,7 @@ public class SpiderController : MonoBehaviour
     public float bodyHeightOffset = 0.5f;
     public float lerpSpeed = 5f;
     public LayerMask groundLayer;
+    
 
     [Header("Leg Group")]
     public SpiderLegController[] legsInZigzagOrder;
@@ -20,7 +21,7 @@ public class SpiderController : MonoBehaviour
     private int currentLegIndex = 0;
     private float stepCooldown = 0.02f;
     private float lastStepTime = 0f;
-    
+    private float rayLength = 50f;
 
     void Update()
     {
@@ -47,8 +48,6 @@ public class SpiderController : MonoBehaviour
 
     void UpdateBodyPose()
     {
-        if (legsInZigzagOrder.Length < 3) return;
-
         int totalPoints = legsInZigzagOrder.Length + bodyRays.Length;
         Vector3[] points = new Vector3[totalPoints];
         Vector3[] normals = new Vector3[totalPoints];
@@ -62,7 +61,7 @@ public class SpiderController : MonoBehaviour
         for (int i = 0; i < bodyRays.Length; i++)
         {
             Vector3 origin = bodyRays[i].transform.position + Vector3.up * 1f;
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 50f, groundLayer))
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayLength, groundLayer))
             {
                 points[legsInZigzagOrder.Length + i] = hit.point;
                 normals[legsInZigzagOrder.Length + i] = hit.normal;

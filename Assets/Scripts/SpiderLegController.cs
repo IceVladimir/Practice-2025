@@ -16,19 +16,22 @@ public class SpiderLegController : MonoBehaviour
     public LayerMask groundLayer;
 
 
+
     private Coroutine currentStepCoroutine = null;
     private bool isStepping = false;
+    private float rayLength = 50f;
+    private float maxDistance_mupliplier = 1.5f;
 
     public void TryMove()
     {
 
         if (isStepping)
         {
-            if (Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit, 50f, groundLayer))
+            if (Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit, rayLength, groundLayer))
             {
-                float dist = Vector3.Distance(ikTarget.position, hit.point);
+                float currentDistance = Vector3.Distance(ikTarget.position, hit.point);
                 
-                if (dist > stepDistance * 1.5f) 
+                if (currentDistance > stepDistance * maxDistance_mupliplier) 
                 {
                     if (currentStepCoroutine != null)
                         StopCoroutine(currentStepCoroutine);
@@ -40,10 +43,10 @@ public class SpiderLegController : MonoBehaviour
             return;
         }
 
-        if (Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit2, 50f, groundLayer))
+        if (Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit2, rayLength, groundLayer))
         {
-            float dist = Vector3.Distance(ikTarget.position, hit2.point);
-            if (dist > stepDistance)
+            float currentDistance = Vector3.Distance(ikTarget.position, hit2.point);
+            if (currentDistance > stepDistance)
             {
                 currentStepCoroutine = StartCoroutine(MoveLeg(hit2.point));
             }
@@ -53,11 +56,11 @@ public class SpiderLegController : MonoBehaviour
     public bool ShouldStep()
     {
         Vector3 origin = raycastOrigin.position;
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 50f, groundLayer))
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayLength, groundLayer))
         {
             Vector3 ikTarget_Horizontal = new Vector3(ikTarget.position.x, 0, ikTarget.position.z);
             Vector3 rayHit_Horizontal = new Vector3(hit.point.x, 0, hit.point.z);
-            //float distance = Mathf.Abs(ikTarget.position.x - hit.point.x);
+
             float dist = Vector3.Distance(ikTarget_Horizontal, rayHit_Horizontal);
             return dist > stepDistance && !isStepping;
         }

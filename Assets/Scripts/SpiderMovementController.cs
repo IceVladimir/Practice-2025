@@ -6,6 +6,8 @@ public class SpiderMovementController : MonoBehaviour
     public LayerMask groundLayer;
     public SpiderController spider;
 
+    private float rayLength = 100f;
+
     void Update()
     {
         HandleClick();
@@ -17,7 +19,7 @@ public class SpiderMovementController : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, rayLength, groundLayer))
             {
                 spider.MoveTo(hit.point);
             }
